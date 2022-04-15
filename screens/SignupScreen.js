@@ -1,23 +1,16 @@
-import {
-    View,
-    SafeAreaView,
-    StyleSheet,
-    StatusBar,
-    Image,
-    TextInput,
-    Text,
-    Button,
-} from "react-native";
+import { View, SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
+import SignupForm from "../components/signupScreen/SignupForm";
 
 const INSTAGRAM_LOGO =
     "https://img.icons8.com/stickers/2x/instagram-new--v2.png";
 
-const SignupScreen = ({ props }) => {
+const SignupScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.logoContainer}>
                 <Image style={styles.logo} source={{ uri: INSTAGRAM_LOGO }} />
             </View>
+            <SignupForm navigation={navigation} />
         </SafeAreaView>
     );
 };

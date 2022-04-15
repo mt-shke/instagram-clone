@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
 </details>
 
 <details>
-<summary>navigation</summary>
+<summary>React-Navigation</summary>
 
 ```js
 // npm i @react-navigation/native
@@ -306,6 +306,15 @@ const screenOptions = {
                 initialRouteName="HomeScreen"
                 screenOptions={screenOptions}
                 //  headerMode="float"
+```
+
+</details>
+
+<details>
+<summary>Firebase</summary>
+
+```js
+// expo install firebase
 ```
 
 </details>

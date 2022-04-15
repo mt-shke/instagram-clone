@@ -15,7 +15,6 @@ const uploadPostSchema = Yup.object().shape({
 
 const FormikPostUploader = ({ navigation }) => {
     const [thumbnailUrl, setThumbnailUrl] = useState(PLACEHOLDER_IMG);
-
     return (
         <Formik
             initialValues={{ caption: "", imageUrl: "" }}

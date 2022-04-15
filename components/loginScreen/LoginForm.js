@@ -3,15 +3,17 @@ import {
     View,
     Text,
     TextInput,
-    Button,
+    Alert,
     StyleSheet,
     Pressable,
     TouchableOpacity,
 } from "react-native";
 import Validator from "email-validator";
 import * as Yup from "yup";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
-const LoginForm = (props) => {
+const LoginForm = ({ navigation }) => {
     const loginFormSchema = Yup.object().shape({
         email: Yup.string().email().required("An email is required"),
         password: Yup.string()
@@ -19,6 +21,19 @@ const LoginForm = (props) => {
             .min(6, "Your password has to have at least 6 characters"),
     });
 
+    const onLogin = async (email, password) => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            console.log(userCredential.user);
+        } catch (error) {
+            console.log(error.message);
+            Alert.alert(error.message);
+        }
+    };
     return (
         <View style={styles.wrapper}>
             <Formik
@@ -93,7 +108,9 @@ const LoginForm = (props) => {
                         <Pressable
                             titleSize={20}
                             style={styles.button(isValid)}
-                            onPress={handleSubmit}
+                            onPress={() =>
+                                onLogin(values.email, values.password)
+                            }
                             disabled={!isValid}
                         >
                             <Text style={styles.buttonText}>Log In</Text>
@@ -101,9 +118,11 @@ const LoginForm = (props) => {
 
                         <View style={styles.signupContainer}>
                             <Text>Don't have an account?</Text>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => navigation.push("SignupScreen")}
+                            >
                                 <Text style={{ color: "#6BB0F5" }}>
-                                    Sign Up
+                                    {` Sign Up`}
                                 </Text>
                             </TouchableOpacity>
                         </View>
