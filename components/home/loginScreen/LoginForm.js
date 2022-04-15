@@ -1,138 +1,16 @@
-<h2 style='color:grey'>React Native</h2>
+import { Formik } from "formik";
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    StyleSheet,
+    Pressable,
+    TouchableOpacity,
+} from "react-native";
+import Validator from "email-validator";
+import * as Yup from "yup";
 
-<details>
-<summary>Setup</summary>
-
-Android studio
-
-```js
-// Optionnal: Install android studio
-```
-
-```js
-// npm install -g expo-cli
-// npm i react-native-elements
-```
-
-formik - yup
-
-```js
-// npm i formik
-// npm i yup
-// npm i email-validator
-
-// NewPostScreen > yup schema > formik
-```
-
-navigation - stack
-
-```js
-// expo start react-native-gesture-handler
-// if !windows => open CLI as admin => set-executionpolicy unrestricted > O
-```
-
-<details>
-<summary>Formik</summary>
-
-<details>
-<summary>postImageForm</summary>
-
-```js
-const uploadPostSchema = Yup.object().shape({
-    imageUrl: Yup.string().url().required("A URL is required"),
-    caption: Yup.string().max(2200, "Caption has reached the character limit"),
-});
-
-const FormikPostUploader = ({ navigation }) => {
-    const [thumbnailUrl, setThumbnailUrl] = useState(PLACEHOLDER_IMG);
-
-    return (
-        <Formik
-            initialValues={{ caption: "", imageUrl: "" }}
-            onSubmit={(values) => {
-                console.log(values),
-                    console.log("post submitted"),
-                    navigation.goBack();
-            }}
-            validationSchema={uploadPostSchema}
-            validateOnMount={true}
-        >
-            {({
-                handleBlur,
-                handleChange,
-                handleSubmit,
-                isValid,
-                values,
-                errors,
-            }) => (
-                <>
-                    <View
-                        style={{
-                            margin: 20,
-                            justifyContent: "space-between",
-                            flexDirection: "row",
-                        }}
-                    >
-                        <Image
-                            source={{
-                                uri: validUrl.isUri(thumbnailUrl)
-                                    ? thumbnailUrl
-                                    : PLACEHOLDER_IMG,
-                            }}
-                            style={{ width: 100, height: 100 }}
-                        />
-                        <View style={{ flex: 1, marginLeft: 12 }}>
-                            <TextInput
-                                style={{ color: "white", fontSize: 20 }}
-                                placeholder="Write a caption..."
-                                placeholderTextColor="gray"
-                                multiline={true}
-                                onChangeText={handleChange("caption")}
-                                onBlur={handleBlur("caption")}
-                                value={values.caption}
-                            ></TextInput>
-                        </View>
-                    </View>
-                    <Divider
-                        width={0.2}
-                        orientation="horizontal"
-                        color="grey"
-                    />
-                    <TextInput
-                        onChange={(e) => setThumbnailUrl(e.nativeEvent.text)}
-                        style={{ color: "white", fontSize: 18 }}
-                        placeholder="Enter image url"
-                        placeholderTextColor="gray"
-                        onChangeText={handleChange("imageUrl")}
-                        onBlur={handleBlur("imageUrl")}
-                        value={values.imageUrl}
-                    ></TextInput>
-                    {errors.imageUrl && (
-                        <Text style={{ fontSize: 10, color: "red" }}>
-                            {errors.imageUrl}
-                        </Text>
-                    )}
-
-                    <Button
-                        onPress={handleSubmit}
-                        title="Share"
-                        disabled={!isValid}
-                    ></Button>
-                </>
-            )}
-        </Formik>
-    );
-};
-
-export default FormikPostUploader;
-```
-
-</details>
-
-<details>
-<summary>loginForm</summary>
-
-```js
 const LoginForm = (props) => {
     const loginFormSchema = Yup.object().shape({
         email: Yup.string().email().required("An email is required"),
@@ -269,45 +147,3 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
-```
-
-</details>
-
-</details>
-
-<details>
-<summary>navigation</summary>
-
-```js
-// npm i @react-navigation/native
-// npm i @react-navigation/stack
-// npm i react-native-gesture-handler
-// npm i valid-url
-
-// navigation > createStackNavigator() > <Stack.screen>
-```
-
-```js
-//  <TouchableOpacity onPress={() => navigation.push("NewPostScreen")} >
-// navigation.navigate('RouteName')
-// navigation.goBack()
-// navigation.popToTop() goFirstScreen
-```
-
-```js
-const screenOptions = {
-    headerShown: false,
-    gestureEnabled: true,
-    gestureDirection: "horizontal",
-};
-
-  <NavigationContainer>
-            <Stack.Navigator
-                initialRouteName="HomeScreen"
-                screenOptions={screenOptions}
-                //  headerMode="float"
-```
-
-</details>
-
-</details>
