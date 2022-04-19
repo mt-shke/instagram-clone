@@ -1,9 +1,21 @@
 import { View, Text, Image, TextInput, Button } from "react-native";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Divider } from "react-native-elements";
 import validUrl from "valid-url";
+import { auth, db } from "../../firebase";
+import {
+    collection,
+    query,
+    where,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    serverTimestamp,
+    addDoc,
+} from "firebase/firestore";
 
 const PLACEHOLDER_IMG = "https://img.icons8.com/stickers/2x/ios-photos.png";
 // https://img.icons8.com/stickers/2x/among-us.png
@@ -15,13 +27,65 @@ const uploadPostSchema = Yup.object().shape({
 
 const FormikPostUploader = ({ navigation }) => {
     const [thumbnailUrl, setThumbnailUrl] = useState(PLACEHOLDER_IMG);
+    const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
+
+    const getUsername = async () => {
+        const user = auth.currentUser;
+        const docRef = doc(db, "users", user.email);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            return setCurrentLoggedInUser({
+                username: userData.username,
+                email: userData.email,
+                profile_picture: userData.profile_picture,
+            });
+        } else {
+            return console.log("No such document!");
+        }
+    };
+
+    useEffect(() => {
+        getUsername();
+    }, []);
+
+    const uploadPostToFirebase = async (imageUrl, caption) => {
+        try {
+            const colRef = collection(
+                db,
+                "users",
+                currentLoggedInUser.email,
+                "posts"
+            );
+
+            const response = await addDoc(colRef, {
+                username: currentLoggedInUser.username,
+                profile_picture: currentLoggedInUser.profile_picture,
+                imageUrl,
+                caption,
+                createdAt: serverTimestamp(),
+                likes_by_users: [],
+                owner_uid: auth.currentUser.uid,
+                owner_email: auth.currentUser.email,
+                comments: [],
+            });
+
+            if (!response) {
+                throw new Error("Cannot add a new story");
+            }
+            return navigation.goBack();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Formik
             initialValues={{ caption: "", imageUrl: "" }}
             onSubmit={(values) => {
-                console.log(values),
-                    console.log("post submitted"),
-                    navigation.goBack();
+                console.log("post submitted"),
+                    uploadPostToFirebase(values.imageUrl, values.caption);
             }}
             validationSchema={uploadPostSchema}
             validateOnMount={true}

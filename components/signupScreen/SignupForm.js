@@ -12,7 +12,7 @@ import Validator from "email-validator";
 import * as Yup from "yup";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db, auth } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const SignupForm = ({ navigation }) => {
     const signupFormSchema = Yup.object().shape({
@@ -36,14 +36,16 @@ const SignupForm = ({ navigation }) => {
                 email,
                 password
             );
-            // console.log(createdUser.user.uid);
 
-            const docRef = await addDoc(collection(db, "users"), {
-                owner_uid: createdUser.user.uid,
-                username: username,
-                email: createdUser.user.email,
-                profile_picture: await getRandomProfilePicture(),
-            });
+            const docRef = await setDoc(
+                doc(db, "users", createdUser.user.email.toString()),
+                {
+                    owner_uid: createdUser.user.uid,
+                    username: username,
+                    email: createdUser.user.email,
+                    profile_picture: await getRandomProfilePicture(),
+                }
+            );
         } catch (error) {
             Alert.alert(error.message);
             console.log(error.message);

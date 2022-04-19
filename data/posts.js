@@ -8,7 +8,7 @@ export const POSTS = [
         likes: 34093,
         caption:
             "Train ride to hogwarts lorem ipsum zdqlqz, Train ride to hogwarts lorem ipsum zdqlqz,Train ride to hogwarts lorem ipsum zdqlqz, Train ride to hogwarts lorem ipsum zdqlqz",
-        profil_picture: USERS[0].image,
+        profile_picture: USERS[0].image,
         comments: [
             {
                 user: "Lera Exelby Exlelkf Lifasto",
@@ -27,7 +27,7 @@ export const POSTS = [
         user: USERS[3].user,
         likes: 34093,
         caption: "Train ride to hogwarts",
-        profil_picture: USERS[3].image,
+        profile_picture: USERS[3].image,
         comments: [
             {
                 user: "Lera Exelby Exlelkf Lifasto",

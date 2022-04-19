@@ -28,7 +28,6 @@ const LoginForm = ({ navigation }) => {
                 email,
                 password
             );
-            console.log(userCredential.user);
         } catch (error) {
             console.log(error.message);
             Alert.alert(error.message);

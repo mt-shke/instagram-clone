@@ -317,6 +317,102 @@ const screenOptions = {
 // expo install firebase
 ```
 
+<details>
+<summary>CRUD</summary>
+
+Create - addDoc
+
+```js
+const colRef = collection(db, "users", currentLoggedInUser.email, "posts");
+
+const response = await addDoc(colRef, {
+    username: currentLoggedInUser.username,
+    profile_picture: currentLoggedInUser.profile_picture,
+    imageUrl,
+    caption,
+    createdAt: serverTimestamp(),
+    likes_by_users: [],
+    owner_uid: auth.currentUser.uid,
+    owner_email: auth.currentUser.email,
+    comments: [],
+});
+```
+
+Read - getDoc
+
+```js
+const getUsername = async () => {
+    const user = auth.currentUser;
+    const docRef = doc(db, "users", user.email);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        const userData = docSnap.data();
+        return setCurrentLoggedInUser({
+            username: userData.username,
+            email: userData.email,
+            profile_picture: userData.profile_picture,
+        });
+    } else {
+        return console.log("No such document!");
+    }
+};
+```
+
+getDocs
+
+```js
+const GetPosts = async () => {
+    const querySnapshot = await getDocs(
+        collection(db, "users", auth.currentUser.email, "posts")
+    );
+    if (!querySnapshot) return;
+    // const docsId = querySnapshot.docs.map((doc) => doc.id);
+
+    const fetchedPosts = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        postId: doc.id,
+    }));
+
+    setPosts(fetchedPosts);
+};
+```
+
+update
+
+```js
+await updateDoc(docRef, {
+    likes_by_users: currentStatus
+        ? arrayUnion(auth.currentUser.email)
+        : arrayRemove(auth.currentUser.email),
+});
+
+// Atomically add a new region to the "regions" array field.
+await updateDoc(washingtonRef, {
+    regions: arrayUnion("greater_virginia"),
+});
+
+// Atomically remove a region from the "regions" array field.
+await updateDoc(washingtonRef, {
+    regions: arrayRemove("east_coast"),
+});
+```
+
+delete
+
+```js
+import { doc, deleteDoc } from "firebase/firestore";
+
+await deleteDoc(doc(db, "cities", "DC"));
+
+const cityRef = doc(db, "cities", "BJ");
+
+// Remove the 'capital' field from the document
+await updateDoc(cityRef, {
+    capital: deleteField(),
+});
+```
+
 </details>
 
 </details>
